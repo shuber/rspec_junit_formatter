@@ -52,6 +52,7 @@ describe RspecJunitFormatter do
     testcase = successful_testcases.first
     expect(testcase).not_to be_nil
     expect(testcase.children).to be_empty
+    expect(testcase.attributes["line"].value).to eq "2"
   end
 
   it "has a pending test case" do
@@ -60,6 +61,7 @@ describe RspecJunitFormatter do
     testcase = pending_testcases.first
     expect(testcase).not_to be_nil
     expect(testcase.element_children.size).to eq 1
+    expect(testcase.attributes["line"].value).to eq "14"
 
     child = testcase.element_children.first
     expect(child.name).to eq "skipped"
@@ -70,9 +72,12 @@ describe RspecJunitFormatter do
   it "has some failed test cases" do
     expect(failed_testcases.size).to be 2
 
+    lines = ["6", "10"]
+
     failed_testcases.each do |testcase|
       expect(testcase).not_to be_nil
       expect(testcase.element_children.size).to eq 1
+      expect(testcase.attributes["line"].value).to eq lines.shift
 
       child = testcase.element_children.first
       expect(child.name).to eq "failure"
